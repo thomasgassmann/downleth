@@ -1,4 +1,7 @@
 import click
+import json
+
+from downleth.download import Downloader
 
 @click.group()
 def downleth_cli():
@@ -7,7 +10,9 @@ def downleth_cli():
 @click.command(name='exec')
 @click.argument('config')
 def exec_cmd(config: str):
-    pass
+    with open(config, 'r') as f:
+        res = json.load(f)
+    d = Downloader(res)
 
 downleth_cli.add_command(exec_cmd)
 
