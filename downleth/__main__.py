@@ -14,6 +14,7 @@ def exec_cmd(config: str):
         res = json.load(f)
     run_schedule(res)
 
+# TODO: add command to spin up local server to watch lecture live locally, web client is unreliable
 downleth_cli.add_command(exec_cmd)
 
 def main():

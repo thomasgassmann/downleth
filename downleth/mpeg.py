@@ -1,16 +1,25 @@
 import aiohttp
-from downleth.common import HEADERS, get
+import asyncio
+from downleth.common import HEADERS
 from downleth.stream import StreamSegment
-
 
 CHUNK_SIZE = 1024
 
+class SegmentDownload:
+    
+    def __init__(self, seg: StreamSegment):
+        self._seg = seg
 
-async def fetch_mpeg(segment: StreamSegment):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(segment.url, headers=HEADERS, verify_ssl=True) as response:
-            while True:
-                res = await response.content.read(CHUNK_SIZE)
-                if res is None:
-                    break
-                yield res
+    async def write_to(self, stream: asyncio.StreamWriter):
+        async for chunk in self.fetch_mpeg_content():
+            await stream.write(chunk)
+
+    async def fetch_mpeg_content(self):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self._seg.url, headers=HEADERS, verify_ssl=True) as response:
+                while True:
+                    res = await response.content.read(CHUNK_SIZE)
+                    if res == b'':
+                        break
+                    yield res
+
