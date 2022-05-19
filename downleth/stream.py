@@ -3,19 +3,13 @@ import m3u8
 import random
 import asyncio
 from dataclasses import dataclass
-from downleth.common import PurgedSet
+from downleth.common import HEADERS, PurgedSet
 
 
 CACHE_BUST = random.randint(10 ** 9, 10 ** 10)
 SERVER = random.randint(1, 2)
 INDEX_TEMPLATE = 'https://oc-vp-livestreaming0{0}.ethz.ch/hls/{1}/index.m3u8?cache={2}'
 PURGED_SET_SIZE = 100
-HEADERS = {
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',
-    'pragma': 'no-cache',
-    'accept-encoding': 'gzip, deflate, br',
-    'accept': '*/*'
-}
 
 def get_index_url(room_id: str):
     return INDEX_TEMPLATE.format(SERVER, room_id, CACHE_BUST)
@@ -31,7 +25,7 @@ async def get_index(room_id: str) -> m3u8.M3U8:
 @dataclass
 class StreamSegment:
     seg_id: int
-    segment: m3u8.Segment
+    url: str
 
 # generates segments asynchronously, a segment is guaranteed to be returned only once
 # however, the segments are not guaranteed to arrive in order, this allows a consumer
@@ -44,7 +38,7 @@ async def generate_segments(room_id: str):
         for segment in index.segments:
             seg_id = int(segment.uri[:-3])
             if not purged_set.has_recently_seen(seg_id):
-                yield StreamSegment(seg_id=seg_id, segment=segment)
+                yield StreamSegment(seg_id=seg_id, url=segment.absolute_uri)
                 purged_set.mark(seg_id)
 
         [_, index] = await asyncio.gather(
