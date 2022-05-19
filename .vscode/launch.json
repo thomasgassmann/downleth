@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "python",
+            "request": "launch",
+            "module": "downleth",
+            "stopOnEntry": false,
+            "console": "integratedTerminal",
+            "args": [
+                "exec",
+                "sample-config.json"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

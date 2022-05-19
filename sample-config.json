@@ -1,11 +1,7 @@
 {
     "lectures": [
         {
-            "room_url": ""
+            "room_identifier": "hg-d-1-1"
         }
-    ],
-    "credentials": {
-        "username": "",
-        "password": ""
-    }
+    ]
 }

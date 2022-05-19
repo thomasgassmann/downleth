@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 click = "*"
 selenium = "*"
+m3u8 = "*"
+aiohttp = "*"
 
 [dev-packages]
 

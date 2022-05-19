@@ -1,7 +1,7 @@
 import click
 import json
 
-from downleth.download import Downloader
+from downleth.schedule import run_schedule
 
 @click.group()
 def downleth_cli():
@@ -12,7 +12,7 @@ def downleth_cli():
 def exec_cmd(config: str):
     with open(config, 'r') as f:
         res = json.load(f)
-    d = Downloader(res)
+    run_schedule(res)
 
 downleth_cli.add_command(exec_cmd)
 
