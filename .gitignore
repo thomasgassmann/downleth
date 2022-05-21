@@ -1,1 +1,6 @@
 __pycache__/
+out/
+*.mp4
+*.ts
+mylist.txt
+

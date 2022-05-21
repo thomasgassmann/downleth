@@ -22,4 +22,3 @@ class SegmentDownload:
                     if res == b'':
                         break
                     yield res
-

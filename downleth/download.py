@@ -8,11 +8,10 @@ class Downloader:
         self._room_id = room_id
 
     async def start(self):
-        async with aiofiles.open('test.mp4', 'wb') as f:
-            async for seg in generate_segments(self._room_id):
+        async for seg in generate_segments(self._room_id):
+            async with aiofiles.open(f'out/{seg.seg_id}.ts', 'wb') as f:
                 d = SegmentDownload(seg)
                 await d.write_to(f)
-                await f.flush()
 
     async def stop(self):
         pass
