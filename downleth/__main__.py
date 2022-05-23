@@ -1,5 +1,6 @@
 import click
 import json
+import asyncio
 
 from downleth.schedule import run_schedule
 
@@ -12,7 +13,7 @@ def downleth_cli():
 def exec_cmd(config: str):
     with open(config, 'r') as f:
         res = json.load(f)
-    run_schedule(res)
+    asyncio.run(run_schedule(res))
 
 # TODO: add command to spin up local server to watch lecture live locally, web client is unreliable
 downleth_cli.add_command(exec_cmd)

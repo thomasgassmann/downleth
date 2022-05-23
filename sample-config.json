@@ -1,7 +1,15 @@
 {
-    "lectures": [
+    "streams": [
         {
-            "room_identifier": "hg-d-1-1"
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "from": "",
+                    "to": ""
+                }
+            },
+            "where": "hg-f-1",
+            "name": "analysis-{0}"
         }
     ]
 }

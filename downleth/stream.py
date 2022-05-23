@@ -36,7 +36,7 @@ async def generate_segments(room_id: str):
     purged_set = PurgedSet(PURGED_SET_SIZE)
     while True:
         for segment in index.segments:
-            seg_id = int(segment.uri[:-3])
+            seg_id = int(segment.uri[:-len('.ts')])
             if not purged_set.has_recently_seen(seg_id):
                 yield StreamSegment(seg_id=seg_id, url=segment.absolute_uri)
                 purged_set.mark(seg_id)

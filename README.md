@@ -1,3 +1,3 @@
 # Lecture Downloader ETH
 
-Download livestreams
+Download livestreams, watch livestreams locally (and reliably!)

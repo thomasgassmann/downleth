@@ -9,6 +9,7 @@ selenium = "*"
 m3u8 = "*"
 aiohttp = "*"
 aiofiles = "*"
+python-ffmpeg = "*"
 
 [dev-packages]
 
