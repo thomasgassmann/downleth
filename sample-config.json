@@ -4,8 +4,9 @@
             "when": {
                 "schedule": "weekly",
                 "timeframe": {
-                    "from": "",
-                    "to": ""
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-25 10:14:30",
+                    "to": "2022-05-25 12:00:00"
                 }
             },
             "where": "hg-f-1",

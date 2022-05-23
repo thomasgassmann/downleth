@@ -25,7 +25,7 @@ class OrderedDownloadQueue:
         self._stream_running = False
 
     async def stream(self):
-        while self._stream_running:
+        while self._stream_running or len(self._q) > 0:
             if len(self._q) == 0 or (self._last_returned is not None and self._q[0][0] != self._last_returned + 1):
                 await self._added.wait()
                 continue
