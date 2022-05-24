@@ -71,6 +71,30 @@
             },
             "where": "etz-e-6",
             "name": "./analysis-tue-johan-stettler-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-09 16:14:00",
+                    "to": "2022-05-09 18:01:00"
+                }
+            },
+            "where": "chn-c-14",
+            "name": "./analysis-mon-johan-stettler-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-10 16:14:00",
+                    "to": "2022-05-10 18:01:00"
+                }
+            },
+            "where": "hg-e-5",
+            "name": "./analysis-tue-gil-{0}.mp4"
         }
     ]
 }
