@@ -1,3 +1,4 @@
+import logging
 import aiohttp
 import asyncio
 from downleth.common import HEADERS
@@ -11,6 +12,7 @@ class SegmentDownload:
         self._seg = seg
 
     async def write_to(self, stream: asyncio.StreamWriter):
+        logging.debug(f'Writing segment {self._seg.seg_id} to stream...')
         async for chunk in self.fetch_mpeg_content():
             await stream.write(chunk)
 

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import aiofiles
 import aiofiles.os
 from ffmpeg import FFmpeg
@@ -37,6 +38,7 @@ class Downloader:
             if not self._should_run:
                 break
 
+            logging.debug(f'Found segment {seg.seg_id} in room {self._room_id}. Adding to download queue...')
             d = SegmentDownload(seg)
             self._download_queue.push(seg.seg_id, d)
         self._download_queue.end_stream()
@@ -45,13 +47,16 @@ class Downloader:
         if self._temp_file is None:
             raise ValueError('something has gone quite wrong')
         
+        logging.info(f'Waiting for all downloads to finish in {self._room_id}')
         await self._download_done.wait()
 
         # TODO: catch errors, see docs to capture progress, etc.
+        logging.info(f'Converting file for room {self._room_id} using ffmpeg. Writing to {out_path}')
         await FFmpeg() \
             .option('y') \
             .input(self._temp_file) \
             .output(out_path) \
             .execute()
 
+        logging.debug(f'Removing {self._temp_file}')
         await aiofiles.os.remove(self._temp_file)

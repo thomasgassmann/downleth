@@ -5,12 +5,12 @@
                 "schedule": "weekly",
                 "timeframe": {
                     "timezone": "Europe/Zurich",
-                    "from": "2022-05-25 10:14:30",
-                    "to": "2022-05-25 12:00:00"
+                    "from": "2022-05-25 10:14:00",
+                    "to": "2022-05-25 12:01:00"
                 }
             },
             "where": "hg-f-1",
-            "name": "analysis-{0}"
+            "name": "./analysis-{0}.mp4"
         }
     ]
 }

@@ -1,27 +1,47 @@
-import aiofiles
 import asyncio
+import logging
 from downleth.download import Downloader
 
-async def download_room(room_id: str, until: int):
-    d = Downloader('hg-e-5')
+async def download_room(room_id: str, download_duration: int, output_file: str):
+    d = Downloader(room_id)
+    logging.info(f'Downloading stream for room {room_id} for {str(download_duration)} seconds')
     await asyncio.wait(
         {
             d.start(),
-            asyncio.sleep(100)
+            asyncio.sleep(download_duration)
         },
         return_when=asyncio.FIRST_COMPLETED
     )
 
-    await d.stop('out.mp4')
+    logging.info(f'Done downloading {room_id}. Writing file...')
+    await d.stop(output_file)
 
-async def run_schedule(config):
-    d = Downloader('hg-e-5')
-    await asyncio.wait(
-        {
-            d.start(),
-            asyncio.sleep(100)
-        },
-        return_when=asyncio.FIRST_COMPLETED
-    )
+class Schedule:
+    
+    def __init__(self, config):
+        self._config = config
 
-    await d.stop('out.mp4')
+    async def run_schedule(self):
+        while True:
+            logging.info(f'{self.name()} is waiting for next execution...')
+            (time, duration) = await self._await_next_execution()
+            logging.info(f'{self.name()} is starting execution')
+            stream_name = self.name().format(str(time))
+            await download_room(self.where(), duration, stream_name)
+
+    def where(self):
+        return self._config['where']
+
+    def name(self):
+        return self._config['name']
+
+    async def _await_next_execution(self):
+        return ('test', 10)
+
+
+async def run_all_schedules(config):
+    streams = [Schedule(item) for item in config['streams']]
+    logging.info(f'Running {len(streams)} schedules...')
+    await asyncio.wait([
+        stream.run_schedule() for stream in streams
+    ])
