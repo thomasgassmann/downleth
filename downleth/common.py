@@ -23,6 +23,8 @@ class OrderedDownloadQueue:
 
     def end_stream(self):
         self._stream_running = False
+        if not self._added.is_set():
+            self._added.set()
 
     async def stream(self):
         while self._stream_running or len(self._q) > 0:
