@@ -5,12 +5,36 @@
                 "schedule": "weekly",
                 "timeframe": {
                     "timezone": "Europe/Zurich",
+                    "from": "2022-05-25 14:14:00",
+                    "to": "2022-05-25 16:01:00"
+                }
+            },
+            "where": "hg-f-1",
+            "name": "./anw-tue-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
                     "from": "2022-05-25 10:14:00",
                     "to": "2022-05-25 12:01:00"
                 }
             },
             "where": "hg-f-1",
-            "name": "./analysis-{0}.mp4"
+            "name": "./analysis-wed-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-24 10:14:00",
+                    "to": "2022-05-24 12:01:00"
+                }
+            },
+            "where": "hg-f-7",
+            "name": "./pprog-tue-{0}.mp4"
         }
     ]
 }
