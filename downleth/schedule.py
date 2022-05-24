@@ -24,13 +24,16 @@ class ScheduleWhen:
     def __init__(self, when_config):
         self._config = when_config
         self._schedule = when_config['schedule'] # 'weekly'
-        self._start = datetime.datetime.utcnow()
+        self._start = self._tz_aware_now()
 
     def reached(self):
-        return datetime.datetime.utcnow() >= self._get_next_weekly_from()
+        return self._tz_aware_now() >= self._get_next_weekly_from() or self._tz_aware_now() <= self._get_next_weekly_to()
 
     async def wait(self):
-        wait_delta = floor((self._get_next_weekly_from() - datetime.datetime.utcnow()).total_seconds())
+        if self._tz_aware_now() <= self._get_next_weekly_to():
+            return # no need to wait
+
+        wait_delta = floor((self._get_next_weekly_from() - self._tz_aware_now()).total_seconds())
         await asyncio.sleep(wait_delta)
 
     def next_name(self):
@@ -41,7 +44,11 @@ class ScheduleWhen:
         raise ValueError(self._schedule)
 
     def next_duration(self):
-        return ceil((self.timeframe_to() - self.timeframe_from()).total_seconds())
+        start = self.timeframe_from()
+        if self._tz_aware_now() <= self._get_next_weekly_to() and self._tz_aware_now() >= self._get_next_weekly_from():
+            start = self._tz_aware_now() 
+
+        return ceil((self.timeframe_to() - start).total_seconds())
 
     def timeframe_from(self):
         return self._parse_date(self._config['timeframe']['from'], self._config['timeframe']['timezone'])
@@ -50,12 +57,28 @@ class ScheduleWhen:
         return self._parse_date(self._config['timeframe']['to'], self._config['timeframe']['timezone'])
 
     def _get_next_weekly_from(self):
+        return self._get_next_weekly_offset(self.timeframe_from())
+
+    def _get_next_weekly_to(self):
+        return self._get_next_weekly_offset(self.timeframe_to())
+
+    def _get_next_weekly_offset(self, d):
         # relative to self._start
-        # TODO: 
-        pass
+        offset = self._get_offset_delta()
+        offset_seconds = floor(offset.total_seconds())
+        seconds = floor((d - self._start).total_seconds()) % offset_seconds
+        return self._start + datetime.timedelta(seconds=seconds)
+
+    def _get_offset_delta(self):
+        if self._schedule == 'weekly':
+            return datetime.timedelta(days=7)
+        raise ValueError(self._schedule)
 
     def _parse_date(self, date_str, timezone):
         return pytz.timezone(timezone).localize(datetime.datetime.fromisoformat(date_str)).astimezone(pytz.utc)
+
+    def _tz_aware_now(self):
+        return datetime.datetime.now(pytz.utc)
 
 class Schedule:
     
@@ -64,25 +87,25 @@ class Schedule:
 
     async def run_schedule(self):
         while True:
-            logging.info(f'{self.name()} is waiting for next execution...')
-            (name_format, duration) = await self._await_next_execution()
-            logging.info(f'{self.name()} is starting execution')
-            stream_name = self.name().format(name_format)
+            (stream_name, duration) = await self._await_next_execution()
             await download_room(self.where(), duration, stream_name)
 
     def where(self):
         return self._config['where']
 
-    def name(self):
+    def name_template(self):
         return self._config['name']
+
+    def name(self, sw):
+        return self.name_template().format(sw.next_name())
 
     async def _await_next_execution(self):
         sw = ScheduleWhen(self._config['when'])
-
+        logging.info(f'{self.name(sw)} is waiting for next execution...')
         while not sw.reached():
             await sw.wait()
-
-        return (sw.next_name(), sw.next_duration())
+        logging.info(f'{self.name(sw)} is starting execution')
+        return (self.name(sw), sw.next_duration())
 
 
 async def run_all_schedules(config):
