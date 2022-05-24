@@ -7,7 +7,8 @@ COPY ./Pipfile.lock ./Pipfile.lock
 RUN pip install pipenv && \
     pipenv install --system --deploy --ignore-pipfile
 
-COPY ./ ./
+COPY ./downleth ./downleth
+COPY ./setup.py ./README.md ./
 
 RUN python setup.py install
 

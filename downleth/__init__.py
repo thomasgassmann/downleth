@@ -1,3 +1,4 @@
 __author__ = 'Thomas Gassmann'
 __email__ = 'thomas.gassmann@hotmail.com'
-__version__ = 'dev'
+version_string = '#{GitVersion}#'
+__version__ = 'dev' if 'GitVersion' in version_string else version_string
