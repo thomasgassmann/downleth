@@ -1,0 +1,101 @@
+{
+    "cache_location": "/media/data/school/eth/recordings/cache",
+    "streams": [
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-17 14:14:00",
+                    "to": "2022-05-17 16:01:00"
+                }
+            },
+            "where": "hg-f-7",
+            "name": "/media/data/school/eth/recordings/anw-tue-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-18 10:14:00",
+                    "to": "2022-05-18 12:01:00"
+                }
+            },
+            "where": "hg-f-1",
+            "name": "/media/data/school/eth/recordings/analysis-wed-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-16 14:14:00",
+                    "to": "2022-05-16 16:01:00"
+                }
+            },
+            "where": "hg-f-1",
+            "name": "/media/data/school/eth/recordings/analysis-mon-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-17 10:14:00",
+                    "to": "2022-05-17 12:01:00"
+                }
+            },
+            "where": "hg-f-7",
+            "name": "/media/data/school/eth/recordings/pprog-tue-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-25 14:14:00",
+                    "to": "2022-05-25 16:01:00"
+                }
+            },
+            "where": "hg-f-7",
+            "name": "/media/data/school/eth/recordings/pprog-wed-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-10 16:14:00",
+                    "to": "2022-05-10 18:01:00"
+                }
+            },
+            "where": "etz-e-6",
+            "name": "/media/data/school/eth/recordings/analysis-tue-johan-stettler-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-09 16:14:00",
+                    "to": "2022-05-09 18:01:00"
+                }
+            },
+            "where": "chn-c-14",
+            "name": "/media/data/school/eth/recordings/analysis-mon-johan-stettler-{0}.mp4"
+        },
+        {
+            "when": {
+                "schedule": "weekly",
+                "timeframe": {
+                    "timezone": "Europe/Zurich",
+                    "from": "2022-05-10 16:14:00",
+                    "to": "2022-05-10 18:01:00"
+                }
+            },
+            "where": "hg-e-5",
+            "name": "/media/data/school/eth/recordings/analysis-tue-gil-{0}.mp4"
+        }
+    ]
+}
