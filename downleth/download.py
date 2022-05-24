@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import logging
 import aiofiles
 import aiofiles.os
@@ -9,11 +10,12 @@ from downleth.stream import generate_segments
 
 class Downloader:
 
-    def __init__(self, room_id: str):
+    def __init__(self, room_id: str, cache_dir):
         self._room_id = room_id
         self._should_run = True
         self._download_queue = OrderedDownloadQueue()
         self._temp_file = None
+        self._cache_dir = cache_dir
         self._download_done = asyncio.Event()
 
     async def start(self):
@@ -27,11 +29,24 @@ class Downloader:
         await self._finalize_download(out_path)
 
     async def _empty_queue(self):
-        async with aiofiles.tempfile.NamedTemporaryFile(mode='wb', delete=False) as f:
-            self._temp_file = f.name
-            async for d in self._download_queue.stream():
-                await d.write_to(f)
+        if self._cache_dir is None:
+            logging.info(f'Using default caching strategy (tempfile)')
+            async with aiofiles.tempfile.NamedTemporaryFile(mode='wb', delete=False) as f:
+                self._temp_file = f.name
+                await self._empty_queue_for(f)
+        else:
+            t0 = datetime.datetime(1, 1, 1)
+            now = datetime.datetime.utcnow()
+            seconds = (now - t0).total_seconds()
+            self._temp_file = f'{self._cache_dir}/{self._room_id}-{str(seconds)}.ts'
+            logging.info(f'Using cache file {self._temp_file} for room {self._room_id}')
+            async with aiofiles.open(self._temp_file, mode='wb') as f:
+                await self._empty_queue_for(f)
         self._download_done.set()
+
+    async def _empty_queue_for(self, f):
+        async for d in self._download_queue.stream():
+            await d.write_to(f)
         
     async def _fill_queue(self):
         async for seg in generate_segments(self._room_id):

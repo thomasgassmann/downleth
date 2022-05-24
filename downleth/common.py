@@ -26,7 +26,11 @@ class OrderedDownloadQueue:
 
     async def stream(self):
         while self._stream_running or len(self._q) > 0:
-            if len(self._q) == 0 or (self._last_returned is not None and self._q[0][0] != self._last_returned + 1):
+            if not self._stream_running and self._is_current_not_next():
+                # give up trying
+                return
+
+            if len(self._q) == 0 or (self._last_returned is not None and self._is_current_not_next()):
                 await self._added.wait()
                 self._added.clear()
                 continue
@@ -35,6 +39,8 @@ class OrderedDownloadQueue:
             self._last_returned = res[0]
             yield res[1]
 
+    def _is_current_not_next(self):
+        return self._q[0][0] != self._last_returned + 1
 
 
 class PurgedSet:

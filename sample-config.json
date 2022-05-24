@@ -1,4 +1,5 @@
 {
+    "cache_location": "./tmp",
     "streams": [
         {
             "when": {
