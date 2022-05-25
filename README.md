@@ -8,3 +8,4 @@ Download livestreams, watch livestreams locally (and reliably!)
 - Allow spinning up local server to watch lectures without web client
 - Allow configuring codecs
 - Automatically cut breaks somehow
+- Consider holidays
