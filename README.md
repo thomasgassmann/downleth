@@ -10,7 +10,7 @@ Install `downleth`:
 pip install downleth
 ```
 
-Make sure you have `ffmpeg` instlalled.
+Make sure you have `ffmpeg` installed.
 
 ## Usage
 
