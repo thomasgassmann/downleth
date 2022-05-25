@@ -22,6 +22,16 @@ downleth --log-level INFO exec sample-config.json
 
 For structuring your configuration file, see `sample-config.json`.
 
+## Development
+
+`pipenv` is used. Use:
+
+```bash
+PIPENV_VENV_IN_PROJECT=1 pipenv install
+```
+
+The `vscode` task might help you get started with debugging.
+
 ## TODO
 
 - Automatically generate configuration file per semester from myStudies, fetch room numbers, etc. automatically
