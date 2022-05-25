@@ -3,4 +3,6 @@ out/
 *.mp4
 *.ts
 mylist.txt
-
+dist/
+build/
+downleth.egg-info/
