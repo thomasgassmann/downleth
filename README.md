@@ -6,6 +6,6 @@ Download livestreams, watch livestreams locally (and reliably!)
 
 - Automatically generate configuration file per semester from myStudies, fetch room numbers, etc. automatically
 - Allow spinning up local server to watch lectures without web client
-- Allow configuring codecs
+- Allow configuring codecs (save storage)
 - Automatically cut breaks somehow
 - Consider holidays
