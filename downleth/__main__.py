@@ -7,13 +7,13 @@ from downleth.schedule import run_all_schedules
 
 def get_log_level(level_str: str) -> int:
     try:
+        import pydevd # if debugger is attached, set log level to debug
+        return logging.DEBUG
+    except ImportError:
         try:
-            import pydevd
-            return logging.DEBUG
-        except ImportError:
             return getattr(logging, level_str) if level_str else logging.INFO
-    except AttributeError:
-        raise click.ClickException(f'Log level {level_str} not found.')
+        except AttributeError:
+            raise click.ClickException(f'Log level {level_str} not found.')
 
 def setup_logger(level_str: str):
     log_formatter = logging.Formatter(
