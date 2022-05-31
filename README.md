@@ -42,3 +42,4 @@ The `vscode` task might help you get started with debugging.
 - Automatically cut breaks somehow
 - Consider holidays
 - Use GitHub actions to publish, maybe GitVersion to version it
+- Allow downloading recordings form video.ethz.ch
