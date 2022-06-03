@@ -126,6 +126,10 @@ class Schedule:
 async def run_all_schedules(config):
     streams = [Schedule(item, config['cache_location']) for item in config['streams']]
     logging.info(f'Running {len(streams)} schedules...')
+    if len(streams) == 0:
+        logging.info('Nothing to do. Exiting...')
+        return
+
     await asyncio.wait([
         stream.run_schedule() for stream in streams
     ])
