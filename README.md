@@ -40,6 +40,7 @@ The `vscode` task might help you get started with debugging.
 - Allow spinning up local server to watch lectures without web client
 - Allow configuring codecs (save storage)
 - Automatically cut breaks somehow
+- Automatically detect start/end of lecture (might sometimes end a bit later or start a bit earlier)
 - Consider holidays
 - Use GitHub actions to publish, maybe GitVersion to version it
 - Allow downloading recordings form video.ethz.ch
