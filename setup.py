@@ -26,7 +26,7 @@ setup(
     long_description=long_description,
     description='downleth: Download ETH streams',
     long_description_content_type='text/markdown',
-    author_email='thomas.gassmann@hotmail.com',
+    author_email='thomas@gassmann.dev',
     url='https://github.com/thomasgassmann/downleth',
     install_requires=install_requires,
     packages=find_packages(),
