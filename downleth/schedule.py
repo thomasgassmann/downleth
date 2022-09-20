@@ -22,6 +22,10 @@ async def download_room(room_id: str, download_duration: int, output_file: str, 
 PERIOD_WEEKLY = 'weekly'
 PERIOD_ONCE = 'once'
 
+class NoFurtherExecutionException(Exception):
+    def __init__(self, name) -> None:
+        self.name = name
+
 class ScheduleWhen:
 
     def __init__(self, when_config, friendly_name_fn):
@@ -45,6 +49,8 @@ class ScheduleWhen:
             return # no need to wait
 
         wait_delta = floor((self._get_next_from() - self._tz_aware_now()).total_seconds())
+        if wait_delta < 0:
+            raise NoFurtherExecutionException(self._friendly_name_fn(self))
 
         wait_until = self._tz_aware_now() + datetime.timedelta(seconds=wait_delta)
         logging.info(f'Waiting for {self._friendly_name_fn(self)} until {wait_until}')
@@ -112,8 +118,12 @@ class Schedule:
 
     async def run_schedule(self):
         while True:
-            (stream_name, duration) = await self._await_next_execution()
-            await download_room(self.where(), duration, stream_name, self._cache_dir)
+            try:
+                (stream_name, duration) = await self._await_next_execution()
+                await download_room(self.where(), duration, stream_name, self._cache_dir)
+            except NoFurtherExecutionException as e:
+                logging.info(f'No further execution for schedule {e.name}')
+                return
 
     def where(self):
         return self._config['where']
