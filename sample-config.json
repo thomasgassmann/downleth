@@ -1,17 +1,20 @@
 {
+    "$schema": "./config.schema.json",
     "cache_location": "./tmp",
     "streams": [
         {
             "when": {
-                "schedule": "weekly",
+                "schedule": "once",
                 "timeframe": {
                     "timezone": "Europe/Zurich",
-                    "from": "2022-05-18 14:14:00",
-                    "to": "2022-05-18 16:01:00"
+                    "from": "2022-09-20 21:05:00",
+                    "to": "2022-09-20 21:40:00"
                 }
             },
-            "where": "hg-f-7",
-            "name": "./tmp/pprog-tue-{0}.mp4"
+            "where": [
+                "cab-g-59"
+            ],
+            "name": "./tmp/eprog-{0}.mp4"
         }
     ]
 }

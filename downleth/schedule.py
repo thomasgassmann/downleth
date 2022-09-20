@@ -2,6 +2,7 @@ import asyncio
 import pytz
 import datetime
 import logging
+from copy import deepcopy
 from math import ceil, floor
 from downleth.download import Downloader
 
@@ -132,7 +133,14 @@ class Schedule:
         return self._config['name']
 
     def name(self, sw):
-        return self.name_template().format(sw.next_name())
+        return self.name_template().format(self._details(sw))
+
+    def _details(self, sw):
+        if 'detail' in self._config and self._config['detail']:
+            detail = self._config['detail']
+            return f'{detail}-{sw.next_name()}'
+
+        return sw.next_name()
 
     async def _await_next_execution(self):
         sw = ScheduleWhen(self._config['when'], self.name)
@@ -143,8 +151,27 @@ class Schedule:
         return (self.name(sw), sw.next_duration())
 
 
+def flatten_schedule(config):
+    flattened_streams = []
+
+    for stream in config['streams']:
+        if isinstance(stream['where'], list):
+            for location in stream['where']:           
+                copy = deepcopy(stream)
+                copy['where'] = location
+                existing_detail = None if 'detail' not in copy else copy['detail']
+                copy['detail'] = f'{location}-{existing_detail}' if existing_detail else location
+                flattened_streams.append(copy)
+        else:
+            flattened_streams.append(stream)
+
+    config['streams'] = flattened_streams
+    return config
+
+
 async def run_all_schedules(config):
-    streams = [Schedule(item, config['cache_location']) for item in config['streams']]
+    flattened = flatten_schedule(config)
+    streams = [Schedule(item, flattened['cache_location']) for item in flattened['streams']]
     logging.info(f'Running {len(streams)} schedules...')
     if len(streams) == 0:
         logging.info('Nothing to do. Exiting...')

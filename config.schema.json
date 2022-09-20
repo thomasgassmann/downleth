@@ -5,6 +5,9 @@
     "Stream": {
       "additionalProperties": false,
       "properties": {
+        "detail": {
+          "type": "string"
+        },
         "name": {
           "type": "string"
         },
