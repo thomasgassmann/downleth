@@ -22,7 +22,7 @@ To schedule a lecture recording based on a config:
 downleth --log-level INFO exec sample-config.json
 ```
 
-For structuring your configuration file, see `sample-config.json`.
+For structuring your configuration file, see `sample-config.json`. There is also a `config.schema.json` JSON schema.
 
 ## Development
 

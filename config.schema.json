@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "Stream": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "when": {
+          "$ref": "#/definitions/When"
+        },
+        "where": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "required": [
+        "when",
+        "where",
+        "name"
+      ],
+      "type": "object"
+    },
+    "Timeframe": {
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "timezone",
+        "from",
+        "to"
+      ],
+      "type": "object"
+    },
+    "When": {
+      "additionalProperties": false,
+      "properties": {
+        "schedule": {
+          "enum": [
+            "weekly",
+            "once"
+          ],
+          "type": "string"
+        },
+        "timeframe": {
+          "$ref": "#/definitions/Timeframe"
+        }
+      },
+      "required": [
+        "schedule",
+        "timeframe"
+      ],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "cache_location": {
+      "type": "string"
+    },
+    "streams": {
+      "items": {
+        "$ref": "#/definitions/Stream"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "cache_location",
+    "streams"
+  ],
+  "type": "object"
+}
