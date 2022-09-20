@@ -65,13 +65,33 @@ class Downloader:
         logging.info(f'Waiting for all downloads to finish in {self._room_id}')
         await self._download_done.wait()
 
-        # TODO: catch errors, see docs to capture progress, etc.
         logging.info(f'Converting file for room {self._room_id} using ffmpeg. Writing to {out_path}')
-        await FFmpeg() \
+        ffmpeg = FFmpeg() \
             .option('y') \
             .input(self._temp_file) \
-            .output(out_path) \
-            .execute()
+            .output(out_path, {'codec:v': 'libx265'})
+
+        @ffmpeg.on('start')
+        def on_start(arguments):
+            logging.info(f'{self._room_id}: {arguments}')
+
+        @ffmpeg.on('stderr')
+        def on_stderr(line):
+            logging.info(f'{self._room_id}: {line}')
+
+        @ffmpeg.on('progress')
+        def on_progress(progress):
+            logging.info(f'{self._room_id}: {progress}')
+
+        @ffmpeg.on('completed')
+        def on_completed():
+            logging.info(f'{self._room_id}: Completed ffmpeg')
+
+        @ffmpeg.on('terminated')
+        def on_terminated():
+            logging.info(f'{self._room_id}: ffmpeg terminated')
+        
+        await ffmpeg.execute()
 
         logging.debug(f'Removing {self._temp_file}')
         await aiofiles.os.remove(self._temp_file)
