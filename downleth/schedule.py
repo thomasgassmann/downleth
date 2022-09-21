@@ -50,7 +50,7 @@ class ScheduleWhen:
             return # no need to wait
 
         wait_delta = floor((self._get_next_from() - self._tz_aware_now()).total_seconds())
-        if wait_delta < 0:
+        if wait_delta < -1:
             raise NoFurtherExecutionException(self._friendly_name_fn(self))
 
         wait_until = self._tz_aware_now() + datetime.timedelta(seconds=wait_delta)
