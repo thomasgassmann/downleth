@@ -5,6 +5,7 @@ from downleth.common import HEADERS
 from downleth.stream import StreamSegment
 
 CHUNK_SIZE = 1024
+RETRY_COUNT = 5
 
 class SegmentDownload:
     
@@ -17,10 +18,21 @@ class SegmentDownload:
             await stream.write(chunk)
 
     async def fetch_mpeg_content(self):
-        async with aiohttp.ClientSession() as session:
-            async with session.get(self._seg.url, headers=HEADERS, verify_ssl=True) as response:
-                while True:
-                    res = await response.content.read(CHUNK_SIZE)
-                    if res == b'':
-                        break
-                    yield res
+        retries = RETRY_COUNT
+        while retries > 0:
+            try:
+                content = []
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(self._seg.url, headers=HEADERS, verify_ssl=True) as response:
+                        while True:
+                            res = await response.content.read(CHUNK_SIZE)
+                            if res == b'':
+                                break
+                            content.append(res)
+                
+                for item in content:
+                    yield item
+                break
+            except:
+                logging.error('Could not fetch mpeg content. Retrying...')
+                retries -= 1

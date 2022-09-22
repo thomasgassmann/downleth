@@ -1,26 +1,45 @@
 import aiohttp
 import m3u8
 import random
+import logging
 import asyncio
 from dataclasses import dataclass
 from downleth.common import HEADERS, PurgedSet
 
 
-CACHE_BUST = random.randint(10 ** 9, 10 ** 10)
-SERVER = random.randint(1, 2)
+CACHE_BUST = 0
+SERVER = 0
 INDEX_TEMPLATE = 'https://oc-vp-livestreaming0{0}.ethz.ch/hls/{1}/index.m3u8?cache={2}'
 PURGED_SET_SIZE = 100
+WAIT_ON_CONNECTION_RESET = 0.5
+
+def reset_connection():
+    global CACHE_BUST
+    global SERVER
+
+    CACHE_BUST = random.randint(10 ** 9, 10 ** 10)
+    SERVER = random.randint(1, 2)
+
+reset_connection()
 
 def get_index_url(room_id: str):
     return INDEX_TEMPLATE.format(SERVER, room_id, CACHE_BUST)
 
 async def get_index(room_id: str) -> m3u8.M3U8:
     url = get_index_url(room_id)
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, headers=HEADERS, verify_ssl=True) as response:
-            text = await response.text()
-            res = m3u8.M3U8(text, base_uri=str(response.url))
-            return res
+    current_wait = WAIT_ON_CONNECTION_RESET
+    while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, headers=HEADERS, verify_ssl=True) as response:
+                    text = await response.text()
+                    res = m3u8.M3U8(text, base_uri=str(response.url))
+                    return res
+        except:
+            reset_connection()
+            logging.error('Could not load index from server.')
+            await asyncio.sleep(current_wait)
+            current_wait *= 2
 
 @dataclass
 class StreamSegment:
