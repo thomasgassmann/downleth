@@ -77,11 +77,11 @@ class Downloader:
 
         @ffmpeg.on('stderr')
         def on_stderr(line):
-            logging.info(f'{self._room_id}: {line}')
+            logging.error(f'{self._room_id}: {line}')
 
         @ffmpeg.on('progress')
         def on_progress(progress):
-            logging.info(f'{self._room_id}: {progress}')
+            logging.debug(f'{self._room_id}: {progress}')
 
         @ffmpeg.on('completed')
         def on_completed():
