@@ -81,7 +81,10 @@
       "type": "string"
     },
     "cache_location": {
-      "type": "string"
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "streams": {
       "items": {

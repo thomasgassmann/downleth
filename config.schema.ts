@@ -18,6 +18,6 @@ export type Stream = {
 
 export type Config = {
     $schema: string;
-    cache_location: string;
+    cache_location: string | null;
     streams: Stream[]
 }
