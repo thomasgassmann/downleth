@@ -4,6 +4,7 @@ import json
 import asyncio
 
 from downleth.schedule import run_all_schedules
+from downleth.watch import watch
 
 def get_log_level(level_str: str) -> int:
     try:
@@ -38,7 +39,13 @@ def exec_cmd(config: str):
         res = json.load(f)
     asyncio.run(run_all_schedules(res))
 
+@click.command(name='watch')
+@click.argument('room_id')
+def watch_cmd(room_id: str):
+    asyncio.run(watch(room_id))
+
 downleth_cli.add_command(exec_cmd)
+downleth_cli.add_command(watch_cmd)
 
 def main():
     downleth_cli(obj={})
