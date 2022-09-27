@@ -60,8 +60,8 @@ class ScheduleWhen:
 
     def next_name(self):
         if self._schedule == PERIOD_WEEKLY:
-            week = self.timeframe_from().isocalendar().week
-            year = self.timeframe_from().isocalendar().year
+            week = self._get_next_from().isocalendar().week
+            year = self._get_next_from().isocalendar().year
             return f'{year}-{week}'
         if self._schedule == PERIOD_ONCE:
             return ''
@@ -144,11 +144,12 @@ class Schedule:
 
     async def _await_next_execution(self):
         sw = ScheduleWhen(self._config['when'], self.name)
-        logging.info(f'{self.name(sw)} is waiting for next execution...')
+        name = self.name(sw)
+        logging.info(f'{name} is waiting for next execution...')
         while not sw.reached():
             await sw.wait()
-        logging.info(f'{self.name(sw)} is starting execution')
-        return (self.name(sw), sw.next_duration())
+        logging.info(f'{name} is starting execution')
+        return (name, sw.next_duration())
 
 
 def flatten_schedule(config):
