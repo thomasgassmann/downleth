@@ -36,14 +36,7 @@ class ScheduleWhen:
         self._friendly_name_fn = friendly_name_fn
 
     def reached(self):
-        if self._tz_aware_now() >= self._get_next_from() and self._tz_aware_now() <= self._get_next_to():
-            return True # lecture is happening now, TODO: it is probably not
-
-        if self._get_next_from() >= self._get_next_to():
-            return True # lecture is really happening now
-
-        # yes, the below comment is useless actually
-        return False # not sure what is going on, will figure it out, actually no i just figured it out, see above
+        return (self._tz_aware_now() >= self._get_next_from() and self._tz_aware_now() <= self._get_next_to()) or self._get_next_from() >= self._get_next_to()
 
     async def wait(self):
         if self.reached():
@@ -95,7 +88,7 @@ class ScheduleWhen:
         # relative to self._start
         offset = self._get_offset_delta()
         offset_seconds = floor(offset.total_seconds())
-        seconds = floor((d - self._start).total_seconds()) % offset_seconds
+        seconds = floor(d.total_seconds() - self._start.total_seconds()) % offset_seconds
         return self._start + datetime.timedelta(seconds=seconds)
 
     def _get_offset_delta(self):
