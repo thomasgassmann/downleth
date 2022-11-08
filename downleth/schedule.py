@@ -77,10 +77,10 @@ class ScheduleWhen:
         return ceil((self._get_next_to() - start).total_seconds())
 
     def timeframe_from(self):
-        return self._parse_date(self._config['timeframe']['from'], self._config['timeframe']['timezone'])
+        return self._parse_date(self._config['timeframe']['from'])
 
     def timeframe_to(self):
-        return self._parse_date(self._config['timeframe']['to'], self._config['timeframe']['timezone'])
+        return self._parse_date(self._config['timeframe']['to'])
 
     def _get_next_from(self):
         return self._get_next_offset(self.timeframe_from())
@@ -94,9 +94,21 @@ class ScheduleWhen:
 
         # relative to self._start
         offset = self._get_offset_delta()
-        offset_seconds = floor(offset.total_seconds())
-        seconds = floor((d - self._start).total_seconds()) % offset_seconds
-        return self._start + datetime.timedelta(seconds=seconds)
+        start = d
+        while start < self._start:
+            start = self._delta_dst_aware(start, offset)
+
+        return start
+
+    def _delta_dst_aware(self, start, delta):
+        tz = self._current_tz()
+        start = start.astimezone(tz)
+        next_date = start + delta
+        next_date = next_date.astimezone(tz)
+        dst_offset_diff = start.dst() - next_date.dst()
+        next_date = next_date + dst_offset_diff
+        next_date = next_date.astimezone(tz)
+        return next_date.astimezone(pytz.utc)
 
     def _get_offset_delta(self):
         if self._schedule == PERIOD_WEEKLY:
@@ -105,8 +117,11 @@ class ScheduleWhen:
             return datetime.timedelta.max
         raise ValueError(self._schedule)
 
-    def _parse_date(self, date_str, timezone):
-        return pytz.timezone(timezone).localize(datetime.datetime.fromisoformat(date_str)).astimezone(pytz.utc)
+    def _current_tz(self):
+        return pytz.timezone(self._config['timeframe']['timezone'])
+
+    def _parse_date(self, date_str):
+        return self._current_tz().localize(datetime.datetime.fromisoformat(date_str)).astimezone(pytz.utc)
 
     def _tz_aware_now(self):
         return datetime.datetime.now(pytz.utc)
