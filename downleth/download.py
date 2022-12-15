@@ -8,6 +8,8 @@ from downleth.common import OrderedDownloadQueue
 from downleth.mpeg import SegmentDownload
 from downleth.stream import generate_segments
 
+MAX_WAIT_TIME = 500
+
 class Downloader:
 
     def __init__(self, room_id: str, cache_dir):
@@ -63,7 +65,13 @@ class Downloader:
             raise ValueError('something has gone quite wrong')
         
         logging.info(f'Waiting for all downloads to finish in {self._room_id}')
-        await self._download_done.wait()
+        await asyncio.wait(
+            {
+                self._download_done.wait(),
+                asyncio.sleep(MAX_WAIT_TIME)
+            },
+            return_when=asyncio.FIRST_COMPLETED
+        )
 
         logging.info(f'Converting file for room {self._room_id} using ffmpeg. Writing to {out_path}')
         ffmpeg = FFmpeg() \

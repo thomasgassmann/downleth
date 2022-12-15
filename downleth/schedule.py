@@ -7,18 +7,21 @@ from math import ceil, floor
 from downleth.download import Downloader
 
 async def download_room(room_id: str, download_duration: int, output_file: str, cache_dir: str | None):
-    d = Downloader(room_id, cache_dir)
-    logging.info(f'Downloading stream for room {room_id} for {str(download_duration)} seconds')
-    await asyncio.wait(
-        {
-            d.start(),
-            asyncio.sleep(download_duration)
-        },
-        return_when=asyncio.FIRST_COMPLETED
-    )
+    try:
+        d = Downloader(room_id, cache_dir)
+        logging.info(f'Downloading stream for room {room_id} for {str(download_duration)} seconds')
+        await asyncio.wait(
+            {
+                d.start(),
+                asyncio.sleep(download_duration)
+            },
+            return_when=asyncio.FIRST_COMPLETED
+        )
 
-    logging.info(f'Done downloading {room_id}. Writing file...')
-    await d.stop(output_file)
+        logging.info(f'Done downloading {room_id}. Writing file...')
+        await d.stop(output_file)
+    except Exception as ex:
+        logging.error(f'Catastrophic failure downloading {room_id} {ex}')
 
 PERIOD_WEEKLY = 'weekly'
 PERIOD_ONCE = 'once'
