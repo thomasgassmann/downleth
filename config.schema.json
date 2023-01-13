@@ -2,6 +2,45 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "additionalProperties": false,
   "definitions": {
+    "Recording": {
+      "additionalProperties": false,
+      "properties": {
+        "department": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "number": {
+          "type": "string"
+        },
+        "semester": {
+          "enum": [
+            "autumn",
+            "spring"
+          ],
+          "type": "string"
+        },
+        "year": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "department",
+        "year",
+        "semester",
+        "number",
+        "name"
+      ],
+      "type": "object"
+    },
+    "ScheduleType": {
+      "enum": [
+        "weekly",
+        "once"
+      ],
+      "type": "string"
+    },
     "Stream": {
       "additionalProperties": false,
       "properties": {
@@ -59,11 +98,7 @@
       "additionalProperties": false,
       "properties": {
         "schedule": {
-          "enum": [
-            "weekly",
-            "once"
-          ],
-          "type": "string"
+          "$ref": "#/definitions/ScheduleType"
         },
         "timeframe": {
           "$ref": "#/definitions/Timeframe"
@@ -86,6 +121,12 @@
         "null"
       ]
     },
+    "recordings": {
+      "items": {
+        "$ref": "#/definitions/Recording"
+      },
+      "type": "array"
+    },
     "streams": {
       "items": {
         "$ref": "#/definitions/Stream"
@@ -96,7 +137,8 @@
   "required": [
     "$schema",
     "cache_location",
-    "streams"
+    "streams",
+    "recordings"
   ],
   "type": "object"
 }

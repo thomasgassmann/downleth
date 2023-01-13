@@ -4,8 +4,10 @@ export type Timeframe = {
     to: string;
 }
 
+export type ScheduleType = 'weekly' | 'once';
+
 export type When = {
-    schedule: 'weekly' | 'once';
+    schedule: ScheduleType;
     timeframe: Timeframe;
 }
 
@@ -16,8 +18,17 @@ export type Stream = {
     detail?: string;
 }
 
+export type Recording = {
+    department: string;
+    year: string;
+    semester: 'autumn' | 'spring';
+    number: string;
+    name: string;
+}
+
 export type Config = {
     $schema: string;
     cache_location: string | null;
-    streams: Stream[]
+    streams: Stream[];
+    recordings: Recording[];
 }

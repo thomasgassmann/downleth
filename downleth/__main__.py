@@ -5,6 +5,12 @@ import asyncio
 
 from downleth.schedule import run_all_schedules
 from downleth.watch import watch
+from downleth.recordings import sync_recordings
+
+def load_config(config: str):
+    with open(config, 'r') as f:
+        res = json.load(f)
+    return res
 
 def get_log_level(level_str: str) -> int:
     try:
@@ -35,17 +41,21 @@ def downleth_cli(log_level: str):
 @click.command(name='exec')
 @click.argument('config')
 def exec_cmd(config: str):
-    with open(config, 'r') as f:
-        res = json.load(f)
-    asyncio.run(run_all_schedules(res))
+    asyncio.run(run_all_schedules(load_config(config)))
 
 @click.command(name='watch')
 @click.argument('room_id')
 def watch_cmd(room_id: str):
     asyncio.run(watch(room_id))
 
+@click.command(name='sync')
+@click.argument('config')
+def sync_cmd(config: str):
+    asyncio.run(sync_recordings(load_config(config)))
+
 downleth_cli.add_command(exec_cmd)
 downleth_cli.add_command(watch_cmd)
+downleth_cli.add_command(sync_cmd)
 
 def main():
     downleth_cli(obj={})

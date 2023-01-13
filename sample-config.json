@@ -14,5 +14,14 @@
             "where": "hg-f-7",
             "name": "./tmp/eprog-{0}.mp4"
         }
+    ],
+    "recordings": [
+        {
+            "department": "d-infk",
+            "year": "2019",
+            "number": "252-0028-00L",
+            "semester": "spring",
+            "name": "./tmp/lecture-{0}.mp4"
+        }
     ]
 }
