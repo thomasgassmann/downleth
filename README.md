@@ -1,5 +1,7 @@
 # Lecture Downloader ETH
 
+> Update HS23: There are no livestreams, this tool is not going to be maintained anymore.
+
 Download livestreams, watch livestreams locally (and reliably!)
 
 As always, respect the privacy of the people being recorded and do not publicise anything you record without first requesting permission to do so. `downleth`'s main use case is recording livestreamed lectures and having them immediately available, especially if one is unable to attend lectures in a certain timespan.
